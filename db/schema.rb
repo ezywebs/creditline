@@ -11,11 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181118054908) do
+ActiveRecord::Schema.define(version: 20181118173046) do
 
   create_table "credit_lines", force: :cascade do |t|
     t.decimal  "limit"
-    t.decimal  "balance"
     t.decimal  "apr"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
