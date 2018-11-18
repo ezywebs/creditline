@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  limit: 9.99
+  balance: 9.99
+  apr: 9.99
+
+two:
+  limit: 9.99
+  balance: 9.99
+  apr: 9.99
