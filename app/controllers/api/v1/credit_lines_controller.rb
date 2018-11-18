@@ -38,7 +38,7 @@ module Api
         begin
           credit_line = CreditLine.find(params[:id])
           if credit_line.update_attributes(credit_line_params)
-            render json: {status: 'SUCCESS', message: 'Credit line was removed successfully', data: credit_line}, status: :ok
+            render json: {status: 'SUCCESS', message: 'Credit line was updated successfully', data: credit_line}, status: :ok
           else
             render json: {status: 'ERROR', message: 'Error while updating credit line.', data: credit_line.errors}, status: :unprocessable_entity
           end
