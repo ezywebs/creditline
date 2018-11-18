@@ -17,6 +17,9 @@ module Api
       
       def create
         credit_line = CreditLine.new(credit_line_params)
+        if credit_line.available.nil? or credit_line.available.eql?(0)
+          credit_line.available = credit_line.limit
+        end
         if credit_line.save
           render json: {status: 'SUCCESS', message: 'Credit line created successfully', data: credit_line}, status: :ok
         else
@@ -49,7 +52,7 @@ module Api
       
       private
       def credit_line_params
-        params.permit(:limit, :balance, :apr)
+        params.permit(:limit, :balance, :apr, :available)
       end
     end
   end

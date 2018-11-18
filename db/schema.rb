@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181118182034) do
+ActiveRecord::Schema.define(version: 20181118222050) do
 
   create_table "credit_lines", force: :cascade do |t|
     t.decimal  "limit"
     t.decimal  "apr"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal  "available"
   end
 
   create_table "draws", force: :cascade do |t|
@@ -25,6 +26,7 @@ ActiveRecord::Schema.define(version: 20181118182034) do
     t.integer  "credit_line_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.integer  "delay_days"
   end
 
 end

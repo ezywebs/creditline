@@ -17,7 +17,12 @@ module Api
 
       def create
         draw = Draw.new(draw_params)
+        if draw.amount > draw.credit_line.limit
+          return render json: {status: 'ERROR', message: 'Not enough credit limit for this transaction. Try with less amount.', data: draw.errors}, status: :unprocessable_entity
+        end
+        draw.created_at = DateTime.now + draw.delay_days.days unless draw.delay_days.nil? or draw.delay_days.eql?(0)
         if draw.save
+          draw.credit_line.update(:available => draw.amount - draw.credit_line.limit)
           render json: {status: 'SUCCESS', message: 'Draw transaction completed successfully!', data: draw}, status: :ok
         else
           render json: {status: 'ERROR', message: 'Error while creating credit line', data: draw.errors}, status: :unprocessable_entity
@@ -49,7 +54,7 @@ module Api
       
       private
       def draw_params
-        params.permit(:amount, :credit_line_id)
+        params.permit(:amount, :credit_line_id, :delay_days)
       end
     end
   end
