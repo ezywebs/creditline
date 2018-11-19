@@ -11,22 +11,43 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181118222050) do
+ActiveRecord::Schema.define(version: 20181119022815) do
 
   create_table "credit_lines", force: :cascade do |t|
     t.decimal  "limit"
     t.decimal  "apr"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
     t.decimal  "available"
+    t.datetime "last_statement"
+    t.integer  "date_adjust"
   end
+
+  create_table "crono_jobs", force: :cascade do |t|
+    t.string   "job_id",                               null: false
+    t.text     "log",               limit: 1073741823
+    t.datetime "last_performed_at"
+    t.boolean  "healthy"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
+
+  add_index "crono_jobs", ["job_id"], name: "index_crono_jobs_on_job_id", unique: true
 
   create_table "draws", force: :cascade do |t|
     t.decimal  "amount"
     t.integer  "credit_line_id"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
-    t.integer  "delay_days"
+    t.integer  "date_adjust"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.decimal  "amount"
+    t.integer  "credit_line_id"
+    t.integer  "date_adjust"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
   end
 
 end

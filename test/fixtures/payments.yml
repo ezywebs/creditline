@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: 
+  credit_line: MyString
+  references,: MyString
+  date_adjust: MyString
+  integer: MyString
+
+two:
+  amount: 
+  credit_line: MyString
+  references,: MyString
+  date_adjust: MyString
+  integer: MyString

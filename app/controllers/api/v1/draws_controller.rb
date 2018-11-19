@@ -23,8 +23,8 @@ module Api
           return render json: {status: 'ERROR', message: 'Not enough credit limit for this transaction. Try with less amount.', data: draw.errors}, status: :unprocessable_entity
         end
         
-        # adjust date created if delay was specified
-        draw.created_at = DateTime.now + draw.delay_days.days unless draw.delay_days.nil? or draw.delay_days.eql?(0)
+        # adjust date created if adjust was specified
+        draw.created_at = DateTime.now + draw.date_adjust.days unless draw.date_adjust.nil? or draw.date_adjust.eql?(0)
         
         if draw.save
           
@@ -33,7 +33,7 @@ module Api
           
           render json: {status: 'SUCCESS', message: 'Draw transaction completed successfully!', data: draw}, status: :ok
         else
-          render json: {status: 'ERROR', message: 'Error while creating credit line', data: draw.errors}, status: :unprocessable_entity
+          render json: {status: 'ERROR', message: 'Error while processing draw transaction.', data: draw.errors}, status: :unprocessable_entity
         end
       end
 
@@ -43,7 +43,7 @@ module Api
           draw.destroy
           render json: {status: 'SUCCESS', message: 'Draw transaction was removed successfully', data: draw}, status: :ok
         rescue ActiveRecord::RecordNotFound  
-          render json: {status: 'ERROR', message: 'Error! This draw transaction is not found in our system and can\'t be removed.'}, status: :unprocessable_entity
+          render json: {status: 'ERROR', message: 'Error! This draw transaction was not found in our system and can\'t be removed.'}, status: :unprocessable_entity
         end
       end
 
@@ -51,18 +51,18 @@ module Api
         begin
           draw = Draw.find(params[:id])
           if draw.update_attributes(draw_params)
-            render json: {status: 'SUCCESS', message: 'Draw transaction was updated successfully', data: credit_line}, status: :ok
+            render json: {status: 'SUCCESS', message: 'Draw transaction was updated successfully', data: draw}, status: :ok
           else
-            render json: {status: 'ERROR', message: 'Error while updating draw transaction.', data: credit_line.errors}, status: :unprocessable_entity
+            render json: {status: 'ERROR', message: 'Error while updating draw transaction.', data: draw.errors}, status: :unprocessable_entity
           end
         rescue ActiveRecord::RecordNotFound  
-          render json: {status: 'ERROR', message: 'Error! This draw transaction is not found in our system and can\'t be removed.'}, status: :unprocessable_entity
+          render json: {status: 'ERROR', message: 'Error! This draw transaction was not found in our system and can\'t be removed.'}, status: :unprocessable_entity
         end
       end
       
       private
       def draw_params
-        params.permit(:amount, :credit_line_id, :delay_days)
+        params.permit(:amount, :credit_line_id, :date_adjust)
       end
     end
   end
