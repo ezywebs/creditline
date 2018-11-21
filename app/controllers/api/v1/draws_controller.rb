@@ -1,11 +1,37 @@
 module Api
   module V1
     class DrawsController < ApplicationController
+      def_param_group :draw_response do
+        property :id, Integer, :desc => "ID of new credit line"
+        property :amount, Float, :desc => "Amount of money to draw"
+        property :credit_line_id, Integer, :desc => "ID of credit line from which to draw money"
+        property :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+        property :created_at, Date, :desc => "Date of creation"
+      end
+      
+      def_param_group :draw_request do
+        param :amount, Float, :desc => "Amount of money to draw", :required => true
+        param :credit_line_id, Integer, :desc => "ID of credit line from which to draw money", :required => true
+        param :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+      end
+      
+      api :GET, "/draws", "List of all draws"
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :draw_response
+        end
+      end
       def index
         draws = Draw.order('created_at DESC')
         render json: {status: 'SUCCESS', message: 'List of all draws', data: draws}, status: :ok
       end
 
+      api :GET, "/draws/:id", "View draw details"
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :draw_response
+        end
+      end
       def show
         begin
           draw = Draw.find(params[:id])
@@ -15,6 +41,14 @@ module Api
         end
       end
 
+      api :POST, "/draws", "Create new draw"
+      param_group :draw_request
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :draw_response
+        end
+      end
       def create
         draw = Draw.new(draw_params)
         
@@ -37,6 +71,8 @@ module Api
         end
       end
 
+      api :DELETE, "/draws/:id", "Delete draw transaction"
+      returns :code => 200, :desc => "a successful response"
       def destroy
         begin
           draw = Draw.find(params[:id])
@@ -47,6 +83,15 @@ module Api
         end
       end
 
+
+      api :PUT, "/draws/:id", "Update draw transaction"
+      param_group :draw_request
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :draw_response
+        end
+      end
       def update
         begin
           draw = Draw.find(params[:id])

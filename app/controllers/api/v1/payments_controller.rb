@@ -1,11 +1,35 @@
 module Api
   module V1
     class PaymentsController < ApplicationController
+      def_param_group :payment_response do
+        property :id, Integer, :desc => "ID of new credit line"
+        property :created_at, Date, :desc => "Date of creation"
+        param_group :payment_request
+      end
+      
+      def_param_group :payment_request do
+        param :amount, Float, :desc => "Payment amount", :required => true
+        param :credit_line_id, Integer, :desc => "ID of credit line to apply payment", :required => true
+        param :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+      end
+      
+      api :GET, "/payments", "List of all payments"
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :payment_response
+        end
+      end
       def index
         payments = Payment.order('created_at DESC')
         render json: {status: 'SUCCESS', message: 'List of all payments', data: payments}, status: :ok
       end
       
+      api :GET, "/payments/:id", "View payment details"
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :payment_response
+        end
+      end
       def show
         begin
           payment = Payment.find(params[:id])
@@ -15,6 +39,14 @@ module Api
         end
       end
       
+      api :POST, "/payments", "Create new payment"
+      param_group :payment_request
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :payment_response
+        end
+      end
       def create
         payment = Payment.new(payment_params)
         credit_line = payment.credit_line
@@ -43,6 +75,8 @@ module Api
         end
       end
       
+      api :DELETE, "/payments/:id", "Delete payment transaction"
+      returns :code => 200, :desc => "a successful response"
       def destroy
         begin
           payment = Payment.find(params[:id])
@@ -53,6 +87,14 @@ module Api
         end
       end
       
+      api :PUT, "/payments/:id", "Update payment transaction"
+      param_group :payment_request
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          param_group :payment_response
+        end
+      end
       def update
         begin
           payment = Payment.find(params[:id])
