@@ -1,7 +1,11 @@
 require 'test_helper'
 
 class CreditLimitTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  def setup
+    @credit_line = CreditLine.new(limit: "", apr: "", date_adjust: "")
+  end
+  
+  test "statement_date should be present" do
+    assert_not @category.valid?
+  end
 end
