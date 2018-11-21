@@ -12,9 +12,9 @@ module Api
       end
       
       def_param_group :credit_line_request do
-        param :limit, Float, :desc => "Limit of credit line", :required => true
-        param :apr, Float, :desc => "APR (interest %)", :required => true
-        param :date_adjust, Integer, :desc => "Adjust the date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+        param :limit, String, :desc => "Limit of credit line", :required => true
+        param :apr, String, :desc => "APR (interest %)", :required => true
+        param :date_adjust, String, :desc => "Adjust the date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
       end
       
       api :GET, "/credit_lines", "Get list of all credit lines"

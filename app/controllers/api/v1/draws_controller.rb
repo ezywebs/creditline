@@ -10,9 +10,9 @@ module Api
       end
       
       def_param_group :draw_request do
-        param :amount, Float, :desc => "Amount of money to draw", :required => true
-        param :credit_line_id, Integer, :desc => "ID of credit line from which to draw money", :required => true
-        param :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+        param :amount, String, :desc => "Amount of money to draw", :required => true
+        param :credit_line_id, String, :desc => "ID of credit line from which to draw money", :required => true
+        param :date_adjust, String, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
       end
       
       api :GET, "/draws", "List of all draws"
