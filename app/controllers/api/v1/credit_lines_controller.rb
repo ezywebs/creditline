@@ -1,11 +1,36 @@
 module Api
   module V1
     class CreditLinesController < ApplicationController
+
+      api :GET, "/credit_lines", "Get list of all credit lines"
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          property :id, Integer, :desc => "ID of new credit line"
+          property :limit, Float, :desc => "Limit of credit line"
+          property :apr, Float, :desc => "APR (interest %)"
+          property :available, Float, :desc => "Available money to draw"
+          property :last_statement, Date, :desc => "Date of last statement"
+          property :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+          property :created_at, String, :desc => "Date of creation"
+        end
+      end
       def index
         credit_lines = CreditLine.order('created_at DESC')
         render json: {status: 'SUCCESS', message: 'List of all credit lines', data: credit_lines}, status: :ok
       end
       
+      api :GET, "/credit_lines/:id", "View Credit Line "
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          property :id, Integer, :desc => "ID of new credit line"
+          property :limit, Float, :desc => "Limit of credit line"
+          property :apr, Float, :desc => "APR (interest %)"
+          property :available, Float, :desc => "Available money to draw"
+          property :last_statement, Date, :desc => "Date of last statement"
+          property :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+          property :created_at, String, :desc => "Date of creation"
+        end
+      end
       def show
         begin
           credit_line = CreditLine.find(params[:id])
@@ -15,6 +40,22 @@ module Api
         end
       end
       
+      api :POST, "/credit_lines", "Create new credit line"
+      param :limit, Float, :desc => "Limit of credit line", :required => true
+      param :apr, Float, :desc => "APR (interest %)", :required => true
+      param :date_adjust, Integer, :desc => "Adjust the date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          property :id, Integer, :desc => "ID of new credit line"
+          property :limit, Float, :desc => "Limit of credit line"
+          property :apr, Float, :desc => "APR (interest %)"
+          property :available, Float, :desc => "Available money to draw"
+          property :last_statement, Date, :desc => "Date of last statement"
+          property :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+          property :created_at, String, :desc => "Date of creation"
+        end
+      end
       def create
         credit_line = CreditLine.new(credit_line_params)
         
@@ -36,6 +77,8 @@ module Api
         end
       end
       
+      api :DELETE, "/credit_lines/:id", "Delete Credit Line"
+      returns :code => 200, :desc => "a successful response"
       def destroy
         begin
           credit_line = CreditLine.find(params[:id])
@@ -46,6 +89,22 @@ module Api
         end
       end
       
+      api :POST, "/credit_lines/:id", "Update credit line"
+      param :limit, Float, :desc => "Limit of credit line", :required => true
+      param :apr, Float, :desc => "APR (interest %)", :required => true
+      param :date_adjust, Integer, :desc => "Adjust the date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+      formats ['json']
+      returns :code => 200, :desc => "a successful response" do
+        property :data, Hash, :desc => "An object" do
+          property :id, Integer, :desc => "ID of new credit line"
+          property :limit, Float, :desc => "Limit of credit line"
+          property :apr, Float, :desc => "APR (interest %)"
+          property :available, Float, :desc => "Available money to draw"
+          property :last_statement, Date, :desc => "Date of last statement"
+          property :date_adjust, Integer, :desc => "Adjusted date created in days (e.g. 30 for 1 month in future, or -30 for 1 month in the past)"
+          property :created_at, String, :desc => "Date of creation"
+        end
+      end
       def update
         begin
           credit_line = CreditLine.find(params[:id])
